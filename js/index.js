@@ -1,4 +1,4 @@
-const maxQuestionCount = 10;
+const maxQuestionCount = 2;
 let questionCount = 1;
 let roundHistory = [];
 
@@ -14,6 +14,11 @@ window.addEventListener('load', () => {
 
   setContent(Home);
   showHighScore();
+
+  document.querySelector('button').focus();
+  document.onclick = (e) => {
+    if (e.target.tagName !== 'BUTTON') document.querySelector('button').focus();
+  };
 });
 
 function setContent(content) {
@@ -50,6 +55,12 @@ function showRules() {
   `;
 
   setContent(Rules);
+
+  document.querySelector('button[onclick="startGame()"]').focus();
+  document.onclick = (e) => {
+    if (e.target.tagName !== 'BUTTON') document.querySelector('button[onclick="startGame()"]').focus();
+    else document.onclick = null;
+  };
 }
 
 function startCountdown() {
@@ -112,6 +123,7 @@ function startContinueCountdown() {
 
   setTimeout(() => {
     continueBtn.parentElement.removeAttribute('disabled');
+    continueBtn.parentElement.focus();
   }, 3000);
 }
 
@@ -147,7 +159,7 @@ function getQuizPoints() {
 }
 
 function showQuizResult() {
-  if (document.querySelector('#quiz-result')) document.querySelector('#quiz-result').remove()
+  if (document.querySelector('#quiz-result')) document.querySelector('#quiz-result').remove();
 
   const currentQuiz = roundHistory[roundHistory.length - 1];
   const expectedAnswer = getQuizAnswer();
@@ -211,7 +223,12 @@ function showQuizResult() {
   }
 
   container.innerHTML += resultDisplay;
+
   startContinueCountdown();
+
+  document.onclick = (e) => {
+    if (e.target.tagName !== 'BUTTON') document.querySelector('button[onclick="nextQuiz()"]').focus();
+  }
 }
 
 function makeQuiz() {
@@ -254,8 +271,10 @@ function makeQuiz() {
           <h2 class="text-center text-6xl font-semibold">${num1} ${operator} ${num2}</h2>
         </div>
         <div class="card-actions justify-center gap-0">
-          <input autofocus type="Number" placeholder="Your answer" class="input w-1/2 rounded-r-none focus:outline-none" />
-          <button onclick="showQuizResult()" class="btn w-1/4 rounded-l-none">Submit</button>
+          <form class="flex justify-center w-full">
+            <input type="Number" placeholder="Your answer" class="input w-1/2 rounded-r-none focus:outline-none" />
+            <button type="submit" class="btn w-1/4 rounded-l-none">Submit</button>
+          </form>
         </div>
       </div>
     </div>
@@ -263,6 +282,16 @@ function makeQuiz() {
 
   setContent(Quiz);
   startQuizCountdown();
+
+  document.querySelector('input').focus();
+  document.onclick = (e) => {
+    if (e.target.tagName !== 'INPUT') document.querySelector('input').focus();
+  };
+
+  document.querySelector('form').addEventListener('submit', (e) => {
+    e.preventDefault();
+    showQuizResult();
+  });
 }
 
 function nextQuiz() {
@@ -315,36 +344,39 @@ function showRoundRecap() {
     </div>
   `;
 
-  setTimeout(() => {
-    setContent(RoundRecap);
-  
-    let resultTable = document.querySelector('tbody');
-  
-    for (question of roundHistory) {
-      const { num1, num2, operator, expectedAnswer, timeRemaining, points } = question;
-      let { userAnswer } = question;
-      userAnswer = !userAnswer && userAnswer !== 0 ? '-' : userAnswer;
+  setContent(RoundRecap);
 
-      resultTable.innerHTML += String.raw`
-        <tr class="text-center">
-          <th>${questionCount++}</th>
-          <td>${`${num1} ${operator} ${num2}`}</td>
-          <td>${expectedAnswer}</td>
-          <td class="font-bold">${userAnswer}</td>
-          <td>${timeRemaining}s</td>
-          <td>${points}</td>
-        </tr>
-      `;
+  let resultTable = document.querySelector('tbody');
 
-      const userAnswerRow = document.querySelectorAll('td.font-bold')[questionCount - 2];
-      if (userAnswer === expectedAnswer) userAnswerRow.classList.add('text-success')
-      else userAnswerRow.classList.add('text-error');
+  for (question of roundHistory) {
+    const { num1, num2, operator, expectedAnswer, timeRemaining, points } = question;
+    let { userAnswer } = question;
+    userAnswer = !userAnswer && userAnswer !== 0 ? '-' : userAnswer;
 
-      totalPoints += points;
-    }
+    resultTable.innerHTML += String.raw`
+      <tr class="text-center">
+        <th>${questionCount++}</th>
+        <td>${`${num1} ${operator} ${num2}`}</td>
+        <td>${expectedAnswer}</td>
+        <td class="font-bold">${userAnswer}</td>
+        <td>${timeRemaining}s</td>
+        <td>${points}</td>
+      </tr>
+    `;
 
-    if (totalPoints > localStorage.getItem('HIGH_SCORE')) setHighScore(totalPoints);
+    const userAnswerRow = document.querySelectorAll('td.font-bold')[questionCount - 2];
+    if (userAnswer === expectedAnswer) userAnswerRow.classList.add('text-success')
+    else userAnswerRow.classList.add('text-error');
 
-    document.querySelector('.badge').innerHTML = `${totalPoints} Points`;
-  }, 700);
+    totalPoints += points;
+  }
+
+  if (totalPoints > localStorage.getItem('HIGH_SCORE')) setHighScore(totalPoints);
+
+  document.querySelector('.badge').innerHTML = `${totalPoints} Points`;
+
+  document.querySelector('button').focus();
+  document.onclick = (e) => {
+    if (e.target.tagName !== 'BUTTON') document.querySelector('button').focus();
+  };
 }
