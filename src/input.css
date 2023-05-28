@@ -6,4 +6,8 @@
   html {
     font-family: 'Poppins', sans-serif;
   }
+
+  .btn:focus-visible {
+    outline: 0 !important;
+  }
 }
