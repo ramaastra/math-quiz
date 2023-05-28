@@ -17,7 +17,7 @@
     "chokidar": "^3.5.3",
     "color-name": "^1.1.4",
     "cssesc": "^3.0.0",
-    "daisyui": "^2.49.0",
+    "daisyui": "^2.51.6",
     "defined": "^1.0.1",
     "detective": "^5.2.1",
     "didyoumean": "^1.2.2",
@@ -66,7 +66,7 @@
     "yaml": "^1.10.2"
   },
   "scripts": {
-    "dev": "npx tailwindcss -i ./src/input.css -o ./dist/style.css --watch"
+    "dev": "npx tailwindcss -i ./src/input.css -o ./dist/css/style.css --watch"
   },
   "author": "",
   "license": "ISC",
