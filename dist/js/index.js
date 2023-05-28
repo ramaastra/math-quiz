@@ -1,4 +1,4 @@
-const maxQuestionCount = 2;
+const maxQuestionCount = 10;
 let questionCount = 1;
 let roundHistory = [];
 
